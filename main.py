@@ -21,6 +21,7 @@ layout = [
     [sg.Text('Distribution Frequency', size =(20, 1)),
     sg.Combo(['Monthly','Quarterly','Annually'],key='period', size=(20, 1))],
     [sg.Text('Holding Period (years)', size =(20, 1)), sg.InputText()],
+    [sg.Checkbox('DRIP (Dividend Reinvestment Plan)', default=True)],
     [sg.Submit(), sg.Cancel()]
 ]
 
@@ -34,13 +35,16 @@ def main():
 
         # Returns the current local date
         today = date.today()
+        for v in values:
+            print(values[v])
         ticket = values[0]
         stock = yf.Ticker(ticket)
-        
+        current_price = stock.info['regularMarketPrice']
         # Check invalid ticket symbol
-        if stock.info['regularMarketPrice'] == None:
+        if current_price == None:
             sg.Popup('Ticket Symbol "' + ticket + '" is not listed')
             sys.exit("Ticket Symbol Not Found")
+        
         
         result_table = []
 
